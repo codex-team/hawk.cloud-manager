@@ -21,7 +21,7 @@ MVP:
 - [ ] Support methods:
     - [ ] Get running config
     - [ ] Bootstrap request
-- [ ] Push configs via PUBSUB (?)
+- [ ] Agent pull config every n seconds
 
 Mid-Term:
 - Read config from Consul

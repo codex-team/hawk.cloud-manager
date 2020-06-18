@@ -1,0 +1,27 @@
+hosts:
+  - name: hawk-collector
+    public_key: AAABBCC
+  - name: hawk-workers
+    public_key: AAABBCC
+  - name: hawk-events
+    public_key: AAABBCC
+  - name: hawk-collector
+    public_key: AAABBCC
+  - name: hawk-api
+    public_key: AAABBCC
+  - name: hawk-monitor
+    public_key: AAABBCC
+  - name: hawk-gcp
+    public_key: AAABBCC
+
+groups:
+  - name: hawk-cloud1
+    hosts:
+      - hawk-collector
+      - hawk-workers
+      - hawk-events
+      - hawk-api
+  - name: hawk-eu
+    hosts:
+      - hawk-monitor
+      - hawk-gcp
