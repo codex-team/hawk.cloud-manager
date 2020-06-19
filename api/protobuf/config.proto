@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package hawk.cloud.manager;
+
+option go_package = "github.com/codex-team/hawk.cloud-manager/api/protobuf";
+
+message Host {
+    string name = 1;
+    string public_key = 2;
+}
+
+message Group {
+    string name = 1;
+    repeated Host hosts = 2;
+}
+
+
+message Config {
+    repeated Host hosts = 1;
+    repeated Group groups = 2;
+}

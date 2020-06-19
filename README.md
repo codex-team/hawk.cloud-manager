@@ -16,7 +16,7 @@
 ## Roadmap
 
 MVP:
-- [ ] Read config from yaml
+- [x] Read config from yaml
 - [ ] Serve as HTTP (maybe GRPC?) server
 - [ ] Support methods:
     - [ ] Get running config

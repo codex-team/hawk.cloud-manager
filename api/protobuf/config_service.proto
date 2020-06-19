@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package hawk.cloud.manager;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "config.proto";
+
+option go_package = "github.com/codex-team/hawk.cloud-manager/api/protobuf";
+
+
+service ConfigService {
+    rpc Get (google.protobuf.Empty) returns (Config) {
+        option (google.api.http) = { get: "/config" };
+    }
+}

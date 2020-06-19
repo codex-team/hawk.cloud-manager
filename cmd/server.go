@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
+	"github.com/codex-team/hawk.cloud-manager/pkg/server"
 )
 
 func init() {
@@ -12,6 +12,6 @@ func init() {
 var serverCmd = &cobra.Command{Use: "server",
 	Short: "Starts cloud-manager server",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Server")
+		server.Run()
 	},
 }

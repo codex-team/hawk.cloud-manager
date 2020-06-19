@@ -1,16 +1,17 @@
 package storage
 
 type Host struct {
-	Name string
+	Name      string
 	PublicKey string
 }
 
 type Group struct {
-	Name string
+	Name  string
 	Hosts []string
 }
 
+//proteus:generate
 type Config struct {
-	Hosts []Host
+	Hosts  []Host
 	Groups []Group
 }
