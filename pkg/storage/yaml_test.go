@@ -1,7 +1,8 @@
-package storages_test
+package storage_test
 
 import (
-	"github.com/codex-team/hawk.cloud-manager/pkg/storage/storages"
+	"github.com/codex-team/hawk.cloud-manager/pkg/config"
+	"github.com/codex-team/hawk.cloud-manager/pkg/storage"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"testing"
@@ -20,12 +21,13 @@ groups:
       - test-host`
 
 func TestYamlStorage_Load(t *testing.T) {
-	expected := storages.YamlConfig{}
+	expected := config.PeerConfig{}
 
 	err := yaml.Unmarshal([]byte(YamlStorage_Load_File), &expected)
 	if err != nil {
 		t.Fatal(err)
 	}
+	t.Logf("Expect:\n%+v", expected)
 
 	tmpfile, err := ioutil.TempFile("", "yaml_load")
 	if err != nil {
@@ -39,19 +41,19 @@ func TestYamlStorage_Load(t *testing.T) {
 	}
 
 
-	yamlStorage := storages.NewYamlStorage(tmpfile.Name())
+	yamlStorage := storage.NewYamlStorage(tmpfile.Name())
 	err = yamlStorage.Load()
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	marsh, err := yaml.Marshal(&yamlStorage.Config)
+	marsh, err := yaml.Marshal(yamlStorage.Get())
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Logf("\n%s", string(marsh))
+	t.Logf("Got:\n%s", string(marsh))
 
-	if diff := deep.Equal(expected, yamlStorage.Config); diff != nil {
+	if diff := deep.Equal(expected, yamlStorage.Get()); diff != nil {
 		t.Error(diff)
 	}
 }

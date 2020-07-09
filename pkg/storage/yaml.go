@@ -1,28 +1,14 @@
-package storages
+package storage
 
 import (
+	"github.com/codex-team/hawk.cloud-manager/pkg/config"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 )
 
-type YamlHost struct {
-	Name      string `yaml:"name"`
-	PublicKey string `yaml:"public_key"`
-}
-
-type YamlGroup struct {
-	Name string `yaml:"name"`
-	Hosts []string `yaml:"hosts"`
-}
-
-type YamlConfig struct {
-	Hosts []YamlHost
-	Groups []YamlGroup
-}
-
 type YamlStorage struct {
 	Filename string
-	Config YamlConfig
+	config   config.PeerConfig
 }
 
 func NewYamlStorage(filename string) *YamlStorage {
@@ -35,7 +21,9 @@ func (s *YamlStorage) Load() error {
 		return err
 	}
 
-	err = yaml.Unmarshal(yamlFile, &s.Config)
+	s.config = config.PeerConfig{}
+
+	err = yaml.Unmarshal(yamlFile, &s.config)
 	if err != nil {
 		return err
 	}
@@ -43,8 +31,12 @@ func (s *YamlStorage) Load() error {
 	return nil
 }
 
+func (s *YamlStorage) Get() config.PeerConfig {
+	return s.config
+}
+
 func (s *YamlStorage) Save() error {
-	data, err := yaml.Marshal(s.Config)
+	data, err := yaml.Marshal(s.config)
 	if err != nil {
 		return err
 	}

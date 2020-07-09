@@ -1,10 +1,8 @@
 package storage
 
-type IStorage interface {
-	Load() error
-	Save() error
-}
+import "github.com/codex-team/hawk.cloud-manager/pkg/config"
 
-type Storage struct {
-	Config Config
+type Storage interface {
+	Load() error
+	Get() config.PeerConfig
 }
