@@ -17,6 +17,5 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
       - name: Install Dependencies
-#          if: steps.cache.outputs.cache-hit != 'true'
           run: go install
       - run: go test ./...
