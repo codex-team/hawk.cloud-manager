@@ -14,6 +14,7 @@ var YamlStorage_Load_File = `
 hosts:
   - name: test-host
     public_key: TESTPUB
+    allowed_ips: ["10.11.0.1/24"]
 
 groups:
   - name: test-group

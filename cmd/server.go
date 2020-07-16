@@ -27,7 +27,11 @@ var (
 				sugared.Fatal(err)
 			}
 
-			manager := server.New(addr, storage.Get(), *logger)
+			manager, err := server.New(addr, storage.Get(), *logger)
+			if err != nil {
+				sugared.Fatal(err)
+			}
+
 			done := make(chan os.Signal, 1)
 			signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 
