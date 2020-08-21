@@ -10,6 +10,8 @@ Get WG peers for current host
 POST /topology HTTP/1.1
 Content-Type: application/json
 
+```
+```jsonc
 {
   "PublicKey:" "yAnz5TF+lXXJte14tji3zlMNq+hd2rYUIgJBgB3fBmk=", // Host's public key
   "Signature": "ASDVASTDCYUADLIA...=" //* ed25519 signature
@@ -21,7 +23,8 @@ Content-Type: application/json
 ```http
 HTTP/1.1 200
 Content-Type: application/json
-
+```
+```jsonc
 {
     "config": {
         // https://github.com/WireGuard/wgctrl-go/blob/master/wgtypes/types.go#L206
