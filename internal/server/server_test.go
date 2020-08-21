@@ -16,16 +16,8 @@ import (
 	"go.uber.org/zap"
 )
 
-func performRequest(r http.Handler, method, path string, body io.Reader) *httptest.ResponseRecorder {
-	req, _ := http.NewRequest(method, path, body)
-	w := httptest.NewRecorder()
-	r.ServeHTTP(w, req)
-
-	return w
-}
-
-func TestServer(t *testing.T) {
-	cfg := config.PeerConfig{
+var (
+	cfg = config.PeerConfig{
 		Hosts: []config.Host{
 			{
 				Name:       "hawk-collector",
@@ -45,16 +37,33 @@ func TestServer(t *testing.T) {
 			},
 		},
 	}
-	m, err := matcher.NewSimpleMatcher(cfg)
-	require.Nil(t, err)
-	srv := &Server{
-		config:  &cfg,
-		matcher: m,
-	}
-	logger, err := zap.NewDevelopment()
-	require.Nil(t, err)
 
-	t.Run("config", func(t *testing.T) {
+	srv = &Server{
+		config: &cfg,
+	}
+	logger *zap.Logger
+)
+
+func initTests() (err error) {
+	srv.matcher, err = matcher.NewSimpleMatcher(cfg)
+	if err != nil {
+		return
+	}
+	logger, err = zap.NewDevelopment()
+	return
+}
+
+func performRequest(r http.Handler, method, path string, body io.Reader) *httptest.ResponseRecorder {
+	req, _ := http.NewRequest(method, path, body)
+	w := httptest.NewRecorder()
+	r.ServeHTTP(w, req)
+
+	return w
+}
+
+func TestGetConfig(t *testing.T) {
+	require.Nil(t, initTests())
+	t.Run("simple", func(t *testing.T) {
 		router := srv.setupRouter(logger)
 		w := performRequest(router, "GET", "/config/cXdlcnRydGV3cnd0cnRxcnFlcnFydHRydHJ5dXlyZXE=", nil)
 		require.Equal(t, http.StatusOK, w.Code)
@@ -66,8 +75,10 @@ func TestServer(t *testing.T) {
 		err = json.Unmarshal(data, &peers)
 		require.Nil(t, err)
 	})
+}
 
-	t.Run("topology", func(t *testing.T) {
+func TestTopology(t *testing.T) {
+	t.Run("simple", func(t *testing.T) {
 		router := srv.setupRouter(logger)
 		w := performRequest(router, "GET", "/topology", nil)
 		require.Equal(t, http.StatusOK, w.Code)
