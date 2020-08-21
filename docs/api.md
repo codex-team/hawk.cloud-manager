@@ -6,7 +6,7 @@ Definitions:
 
 ## `/topology`
 
-This endpoint return WireGuard configuration for Cloud Agent
+This endpoint return WireGuard configuration (aka topology) for Cloud Agent
 
 ### Request
 
