@@ -39,7 +39,7 @@ Content-Type: application/json
             "PublicKey": "yAnz5TF+lXXJte14tji3zlMNq+hd2rYUIgJBgB3fBmk=", // WireGuard peer public key
             "Endpoint": "wg.example.com:51820", // WireGuard peer endpoint
             "PersistentKeepAliveInterval": "25s", // WireGuard peer keep alive interval
-            "AllowedIPs": "10.11.0.76/32" // WireGuard peer allowed IPs
+            "AllowedIPs": ["10.11.0.76/32"] // WireGuard peer allowed IPs
         }]
     }
 }
