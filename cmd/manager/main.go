@@ -2,13 +2,13 @@ package main
 
 import (
 	"flag"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
 
 	"github.com/codex-team/hawk.cloud-manager/internal/server"
 	"github.com/codex-team/hawk.cloud-manager/internal/storage/yaml"
-	"go.uber.org/zap"
 )
 
 var (
@@ -23,18 +23,15 @@ func init() {
 
 func main() {
 	flag.Parse()
-	logger, _ := zap.NewDevelopment()
-	defer logger.Sync()
-	sugared := logger.Sugar()
 
 	storage := yaml.NewYamlStorage(storageFile)
 	if err := storage.Load(); err != nil {
-		sugared.Fatal(err)
+		log.Fatal(err)
 	}
 
-	manager, err := server.New(addr, storage.Get(), logger)
+	manager, err := server.New(addr, storage.Get())
 	if err != nil {
-		sugared.Fatal(err)
+		log.Fatal(err)
 	}
 
 	done := make(chan os.Signal, 1)
@@ -43,13 +40,13 @@ func main() {
 
 	defer func() {
 		if err := manager.Stop(); err != nil {
-			sugared.Error("server stopped with error", zap.Error(err))
+			log.Fatal("server stopped with error: %w", err)
 			return
 		}
 	}()
 
 	go func() {
-		sugared.Infof("server started at %s", addr)
+		log.Printf("server started at %s", addr)
 		errs <- manager.Run()
 	}()
 
@@ -59,7 +56,7 @@ func main() {
 		return
 	case err = <-errs:
 		if err != nil {
-			sugared.Error("server exited with error", zap.Error(err))
+			log.Fatal("server exited with error: %w", err)
 		}
 		return
 	}

@@ -23,22 +23,31 @@ type PeerConfig struct {
 	Groups []Group `yaml:"groups" json:"groups"`
 }
 
-func (h *Host) ToAPIPeer() (*api.Peer, error) {
-	key, err := api.NewKey(h.PublicKey)
-	if err != nil {
-		return nil, err
+func (p *PeerConfig) ToAPIConf() (*api.Conf, error) {
+	cf := api.Conf{
+		Peers: []api.Peer{},
 	}
-	var peer = api.Peer{
-		PublicKey: key,
-		Endpoint:  &h.Endpoint,
-	}
-	peer.AllowedIPs = make([]net.IPNet, len(h.AllowedIPs))
-	for i, cidr := range h.AllowedIPs {
-		_, ipnet, err := net.ParseCIDR(cidr)
+
+	for _, h := range p.Hosts {
+		key, err := api.NewKey(h.PublicKey)
 		if err != nil {
 			return nil, err
 		}
-		peer.AllowedIPs[i] = *ipnet
+		ips := make([]net.IPNet, len(h.AllowedIPs))
+		for i, cidr := range h.AllowedIPs {
+			_, ipnet, err := net.ParseCIDR(cidr)
+			if err != nil {
+				return nil, err
+			}
+			ips[i] = *ipnet
+		}
+
+		cf.Peers = append(cf.Peers, api.Peer{
+			PublicKey:  key,
+			Endpoint:   h.Endpoint,
+			AllowedIPs: ips,
+		})
 	}
-	return &peer, nil
+
+	return &cf, nil
 }

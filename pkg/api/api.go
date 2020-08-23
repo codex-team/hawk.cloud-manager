@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"net"
+	"time"
 
 	wg "golang.zx2c4.com/wireguard/wgctrl/wgtypes"
 )
@@ -12,15 +13,24 @@ const KeyLen = wg.KeyLen
 
 type Key [KeyLen]byte
 
+//easyjson:json
 type Peer struct {
-	PublicKey  Key
-	Endpoint   *string
-	AllowedIPs []net.IPNet
+	PublicKey                   Key           `json:"public_key"`
+	Endpoint                    string        `json:"endpoint"`
+	PersistentKeepAliveInterval time.Duration `json:"keep_alive_interval"`
+	AllowedIPs                  []net.IPNet   `json:"allowed_ips"`
 }
 
+//easyjson:json
 type Conf struct {
-	ListenPort int
-	Peers      []Peer
+	ListenPort int    `json:"listen_port"`
+	Peers      []Peer `json:"peers"`
+}
+
+//easyjson:json
+type Creds struct {
+	PublicKey string `json:"public_key"`
+	Signature string `json:"signature"`
 }
 
 func NewKey(s string) (Key, error) {

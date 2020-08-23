@@ -1,57 +1,46 @@
 package server
 
 import (
-	"fmt"
 	"net/http"
-	"time"
 
-	ginzap "github.com/akath19/gin-zap"
+	"github.com/codex-team/hawk.cloud-manager/pkg/api"
 	"github.com/codex-team/hawk.cloud-manager/pkg/config"
-	"github.com/codex-team/hawk.cloud-manager/pkg/matcher"
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 )
-
-const logDuration = 3 * time.Second
 
 type Server struct {
 	config  *config.PeerConfig
-	matcher *matcher.Simple
+	apiConf *api.Conf
 	http    *http.Server
 }
 
-func New(addr string, config *config.PeerConfig, logger *zap.Logger) (*Server, error) {
-	peerMatcher, err := matcher.NewSimpleMatcher(*config)
-	if err != nil {
-		return nil, err
-	}
-
+func New(addr string, config *config.PeerConfig) (*Server, error) {
 	var server = &Server{
-		config:  config,
-		matcher: peerMatcher,
+		config: config,
 		http: &http.Server{
 			Addr: addr,
 		},
 	}
-	server.http.Handler = server.setupRouter(logger)
+	server.http.Handler = server.setupRouter()
+	apiConf, err := (*server.config).ToAPIConf()
+	if err != nil {
+		return nil, err
+	}
+	server.apiConf = apiConf
 
 	return server, nil
 }
 
-func (s *Server) setupRouter(logger *zap.Logger) *gin.Engine {
+func (s *Server) setupRouter() *gin.Engine {
 	r := gin.Default()
-	r.Use(ginzap.Logger(logDuration, logger))
-
-	r.GET("/topology", s.handleTopology)
-	r.GET("/config/:key", s.handleConfig)
+	r.POST("/topology", s.handleTopology)
+	//	r.GET("/config/:key", s.handleConfig)
 
 	return r
 }
 
 func (s *Server) Run() error {
 	gin.SetMode(gin.ReleaseMode)
-	fmt.Println("Server")
-
 	return s.http.ListenAndServe()
 }
 
