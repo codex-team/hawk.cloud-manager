@@ -17,7 +17,7 @@ var (
 )
 
 func init() {
-	flag.StringVar(&storageFile, "storage", "examples/config.yaml", "Storage config YAML file")
+	flag.StringVar(&storageFile, "config", "examples/config.yaml", "Storage config YAML file")
 	flag.StringVar(&addr, "addr", "0.0.0.0:50051", "Listening addr")
 }
 

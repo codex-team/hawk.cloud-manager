@@ -13,6 +13,19 @@
 - Syncs peer config
 - Initiates new peer request
 
+## Usage
+
+Run manager:
+```shell
+$ make
+$ ./manager -addr <address to listen> -config /path/to/congig.yaml
+```
+
+Run tests:
+```shell
+$ make test
+```
+
 ## Roadmap
 
 MVP:
