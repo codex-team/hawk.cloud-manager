@@ -18,7 +18,7 @@
 Run manager:
 ```shell
 $ make
-$ ./manager -addr <address to listen> -config /path/to/congig.yaml
+$ ./manager -addr <address to listen> -config /path/to/config.yaml
 ```
 
 Run tests:
