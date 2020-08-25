@@ -1,6 +1,7 @@
 package server
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"net/http"
 
@@ -41,7 +42,7 @@ func (s *Server) handleTopology(c *gin.Context) {
 		return
 	}
 	creds := api.Creds{}
-	err = creds.UnmarshalJSON(bodyBytes)
+	err = json.Unmarshal(bodyBytes, &creds)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"failed to parse JSON": err})
 		return
@@ -49,7 +50,7 @@ func (s *Server) handleTopology(c *gin.Context) {
 
 	for _, h := range s.config.Hosts {
 		if h.PublicKey == creds.PublicKey {
-			respBody, err := (*s.apiConf).MarshalJSON()
+			respBody, err := json.Marshal(*s.apiConf)
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{"failed to write response": err})
 				return

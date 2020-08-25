@@ -13,7 +13,6 @@ const KeyLen = wg.KeyLen
 
 type Key [KeyLen]byte
 
-//easyjson:json
 type Peer struct {
 	PublicKey                   Key           `json:"public_key"`
 	Endpoint                    string        `json:"endpoint"`
@@ -21,18 +20,21 @@ type Peer struct {
 	AllowedIPs                  []net.IPNet   `json:"allowed_ips"`
 }
 
-//easyjson:json
 type Conf struct {
 	ListenPort int    `json:"listen_port"`
 	Peers      []Peer `json:"peers"`
 }
 
-//easyjson:json
 type Creds struct {
 	PublicKey string `json:"public_key"`
 	Signature string `json:"signature"`
 }
 
+/*
+func (c *Conf) MarshalJSON() ([]byte, error) {
+
+}
+*/
 func NewKey(s string) (Key, error) {
 	key := Key{}
 	b, err := base64.StdEncoding.DecodeString(s)

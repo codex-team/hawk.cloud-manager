@@ -3,6 +3,7 @@ package server
 import (
 	"bytes"
 	"encoding/base64"
+	"encoding/json"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -79,14 +80,14 @@ func TestGetConfig(t *testing.T) {
 
 func TestTopology(t *testing.T) {
 	t.Run("simple", func(t *testing.T) {
-		body, err := requestBody.MarshalJSON()
+		body, err := json.Marshal(requestBody)
 		require.Nil(t, err)
 
 		router := srv.setupRouter()
 		w := performRequest(router, "POST", "/topology", bytes.NewReader(body))
 		require.Equal(t, http.StatusOK, w.Code)
 
-		expected, err := srv.apiConf.MarshalJSON()
+		expected, err := json.Marshal(srv.apiConf)
 		require.Nil(t, err)
 
 		strBody, err := strconv.Unquote(w.Body.String())
@@ -99,7 +100,7 @@ func TestTopology(t *testing.T) {
 
 	t.Run("unknown public key", func(t *testing.T) {
 		requestBody.PublicKey = "yAnz5TF+lXXJte14tji3zlMNq+hd2rYUIgJBgB3fBmk="
-		body, err := requestBody.MarshalJSON()
+		body, err := json.Marshal(requestBody)
 		require.Nil(t, err)
 
 		router := srv.setupRouter()
