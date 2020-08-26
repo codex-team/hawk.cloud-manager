@@ -34,7 +34,6 @@ func New(addr string, config *config.PeerConfig) (*Server, error) {
 func (s *Server) setupRouter() *gin.Engine {
 	r := gin.Default()
 	r.POST("/topology", s.handleTopology)
-	//	r.GET("/config/:key", s.handleConfig)
 
 	return r
 }

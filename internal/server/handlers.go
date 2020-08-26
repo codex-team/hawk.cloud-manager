@@ -9,38 +9,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-/*
-func (s *Server) handleConfig(c *gin.Context) {
-	rawKey := c.Param("key")
-	if rawKey == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Errorf("received empty key")})
-		return
-	}
-	key, err := api.NewKey(rawKey)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	peers, err := s.matcher.Peers(key)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	respBody, err := json.Marshal(peers)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, respBody)
-}
-*/
-
+// handleTopology returns WireGuard configuration for Cloud Agent
 func (s *Server) handleTopology(c *gin.Context) {
 	bodyBytes, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"failed to read request body": err})
 		return
 	}
+	// Receive public key and signature
 	creds := api.Creds{}
 	err = json.Unmarshal(bodyBytes, &creds)
 	if err != nil {
@@ -48,6 +24,7 @@ func (s *Server) handleTopology(c *gin.Context) {
 		return
 	}
 
+	// Check public key
 	for _, h := range s.config.Hosts {
 		if h.PublicKey == creds.PublicKey {
 			respBody, err := json.Marshal(*s.apiConf)

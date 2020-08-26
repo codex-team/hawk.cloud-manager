@@ -24,11 +24,13 @@ func init() {
 func main() {
 	flag.Parse()
 
+	// Create Storage and load Config
 	storage := yaml.NewYamlStorage(storageFile)
 	if err := storage.Load(); err != nil {
 		log.Fatal(err)
 	}
 
+	// Create server
 	manager, err := server.New(addr, storage.Get())
 	if err != nil {
 		log.Fatal(err)
@@ -45,6 +47,7 @@ func main() {
 		}
 	}()
 
+	// Run server
 	go func() {
 		log.Printf("server started at %s", addr)
 		errs <- manager.Run()

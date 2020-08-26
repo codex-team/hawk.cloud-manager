@@ -23,6 +23,7 @@ type PeerConfig struct {
 	Groups []Group `yaml:"groups" json:"groups"`
 }
 
+// ToAPIConf converts PeerConfig to api.Conf
 func (p *PeerConfig) ToAPIConf() (*api.Conf, error) {
 	cf := api.Conf{
 		Peers: []api.Peer{},

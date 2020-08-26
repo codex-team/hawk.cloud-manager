@@ -8,6 +8,8 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+// YamlStorage is an implementation of Storage interface that stores peer
+// configuration in a yaml file
 type YamlStorage struct {
 	Filename string
 	config   config.PeerConfig

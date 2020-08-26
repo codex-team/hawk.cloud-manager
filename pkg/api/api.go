@@ -11,6 +11,7 @@ import (
 
 const KeyLen = wg.KeyLen
 
+// Key is base64-encoded byte array that is 32 bytes long
 type Key [KeyLen]byte
 
 type Peer struct {
@@ -20,21 +21,19 @@ type Peer struct {
 	AllowedIPs                  []net.IPNet   `json:"allowed_ips"`
 }
 
+// Conf is WireGuard configuration
 type Conf struct {
 	ListenPort int    `json:"listen_port"`
 	Peers      []Peer `json:"peers"`
 }
 
+// Creds is request data required to get WireGuard configuration
 type Creds struct {
 	PublicKey string `json:"public_key"`
 	Signature string `json:"signature"`
 }
 
-/*
-func (c *Conf) MarshalJSON() ([]byte, error) {
-
-}
-*/
+// NewKey parses a Key from a string
 func NewKey(s string) (Key, error) {
 	key := Key{}
 	b, err := base64.StdEncoding.DecodeString(s)
