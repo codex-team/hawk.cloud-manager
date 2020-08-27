@@ -32,6 +32,7 @@ func New(addr string, config *config.PeerConfig) (*Server, error) {
 }
 
 func (s *Server) setupRouter() *gin.Engine {
+	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 	r.POST("/topology", s.handleTopology)
 
@@ -39,7 +40,6 @@ func (s *Server) setupRouter() *gin.Engine {
 }
 
 func (s *Server) Run() error {
-	gin.SetMode(gin.ReleaseMode)
 	return s.http.ListenAndServe()
 }
 
