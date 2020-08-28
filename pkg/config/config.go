@@ -6,6 +6,7 @@ import (
 	"github.com/codex-team/hawk.cloud-manager/pkg/api"
 )
 
+// Host is information about a host included in PeerConfig
 type Host struct {
 	Name       string   `yaml:"name" json:"name"`
 	PublicKey  string   `yaml:"public_key" json:"public_key"`
@@ -13,11 +14,13 @@ type Host struct {
 	AllowedIPs []string `yaml:"allowed_ips" json:"allowed_ips"`
 }
 
+// Group is association of hosts
 type Group struct {
 	Name  string   `yaml:"name" json:"name"`
 	Hosts []string `yaml:"hosts" json:"hosts"`
 }
 
+// PeerConfig is peer configuration stored in Storage
 type PeerConfig struct {
 	Hosts  []Host  `yaml:"hosts" json:"hosts"`
 	Groups []Group `yaml:"groups" json:"groups"`

@@ -18,7 +18,7 @@
 Run manager:
 ```shell
 $ make
-$ ./manager -addr <address to listen> -config /path/to/config.yaml
+$ ./manager -addr <address to listen, format: 0.0.0.0:50051> -config /path/to/config.yaml
 ```
 
 Run tests:
