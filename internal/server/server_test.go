@@ -60,25 +60,8 @@ func performRequest(r http.Handler, method, path string, body io.Reader) *httpte
 	return w
 }
 
-func TestGetConfig(t *testing.T) {
-	require.Nil(t, initTests())
-	/*
-		t.Run("simple", func(t *testing.T) {
-			router := srv.setupRouter(logger)
-			w := performRequest(router, "GET", "/config/cXdlcnRydGV3cnd0cnRxcnFlcnFydHRydHJ5dXlyZXE=", nil)
-			require.Equal(t, http.StatusOK, w.Code)
-			strBody, err := strconv.Unquote(w.Body.String())
-			require.Nil(t, err)
-			data, err := base64.StdEncoding.DecodeString(strBody)
-			require.Nil(t, err)
-			peers := make([]api.Peer, 0)
-			err = json.Unmarshal(data, &peers)
-			require.Nil(t, err)
-		})
-	*/
-}
-
 func TestTopology(t *testing.T) {
+	require.Nil(t, initTests())
 	t.Run("simple", func(t *testing.T) {
 		body, err := json.Marshal(requestBody)
 		require.Nil(t, err)

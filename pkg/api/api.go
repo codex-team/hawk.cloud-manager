@@ -15,21 +15,29 @@ const KeyLen = wg.KeyLen
 type Key [KeyLen]byte
 
 type Peer struct {
-	PublicKey                   Key           `json:"public_key"`
-	Endpoint                    string        `json:"endpoint"`
+	// WireGuard peer public key
+	PublicKey Key `json:"public_key"`
+	// WireGuard peer endpoint
+	Endpoint string `json:"endpoint"`
+	// WireGuard peer keep alive interval
 	PersistentKeepAliveInterval time.Duration `json:"keep_alive_interval"`
-	AllowedIPs                  []net.IPNet   `json:"allowed_ips"`
+	// WireGuard peer allowed IPs
+	AllowedIPs []net.IPNet `json:"allowed_ips"`
 }
 
 // Conf is WireGuard configuration
 type Conf struct {
-	ListenPort int    `json:"listen_port"`
-	Peers      []Peer `json:"peers"`
+	// WireGuard Listen port
+	ListenPort int `json:"listen_port"`
+	// Peers list
+	Peers []Peer `json:"peers"`
 }
 
 // Creds is request data required to get WireGuard configuration
 type Creds struct {
+	// WireGuard public key
 	PublicKey string `json:"public_key"`
+	// Ed25519 signature
 	Signature string `json:"signature"`
 }
 
@@ -48,6 +56,7 @@ func NewKey(s string) (Key, error) {
 	return key, nil
 }
 
+// String returns string representation of Key
 func (k Key) String() string {
 	return base64.StdEncoding.EncodeToString(k[:])
 }

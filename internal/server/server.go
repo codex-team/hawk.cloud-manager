@@ -8,12 +8,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Server is struct that wraps HTTP server and contains current configuration
 type Server struct {
-	config  *config.PeerConfig
+	// Peer config
+	config *config.PeerConfig
+	// WireGuard config
 	apiConf *api.Conf
-	http    *http.Server
+	// HTTP server
+	http *http.Server
 }
 
+// New creates Server and returns pointer to it
 func New(addr string, config *config.PeerConfig) (*Server, error) {
 	var server = &Server{
 		config: config,
@@ -31,6 +36,7 @@ func New(addr string, config *config.PeerConfig) (*Server, error) {
 	return server, nil
 }
 
+// setupRouter initializes handlers and returns new router
 func (s *Server) setupRouter() *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
@@ -39,10 +45,12 @@ func (s *Server) setupRouter() *gin.Engine {
 	return r
 }
 
+// Run starts HTTP server
 func (s *Server) Run() error {
 	return s.http.ListenAndServe()
 }
 
+// Stop closes HTTP server
 func (s *Server) Stop() error {
 	return s.http.Close()
 }

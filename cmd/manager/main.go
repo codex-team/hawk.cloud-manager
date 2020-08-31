@@ -12,16 +12,20 @@ import (
 )
 
 var (
+	// Storage config YAML file
 	storageFile string
-	addr        string
+	// Address to listen
+	addr string
 )
 
+// init initializes command line flags
 func init() {
 	flag.StringVar(&storageFile, "config", "examples/config.yaml", "Storage config YAML file")
 	flag.StringVar(&addr, "addr", "0.0.0.0:50051", "Listening addr")
 }
 
 func main() {
+	// Parse command line flags
 	flag.Parse()
 
 	// Create Storage and load Config
