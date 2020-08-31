@@ -13,6 +13,19 @@
 - Syncs peer config
 - Initiates new peer request
 
+## Usage
+
+Run manager:
+```shell
+$ make
+$ ./manager -addr <address to listen, format: 0.0.0.0:50051> -config /path/to/config.yaml
+```
+
+Run tests:
+```shell
+$ make test
+```
+
 ## Roadmap
 
 MVP:
