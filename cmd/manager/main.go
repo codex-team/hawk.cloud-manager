@@ -35,7 +35,7 @@ func main() {
 	}
 
 	// Create server
-	manager, err := server.New(addr, storage.Get())
+	manager, err := server.New(addr, storage)
 	if err != nil {
 		log.Fatal(err)
 	}

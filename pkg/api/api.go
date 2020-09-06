@@ -18,9 +18,9 @@ type Peer struct {
 	// WireGuard peer public key
 	PublicKey Key `json:"public_key"`
 	// WireGuard peer endpoint
-	Endpoint string `json:"endpoint"`
+	Endpoint string `json:"endpoint,omitempty"`
 	// WireGuard peer keep alive interval
-	PersistentKeepAliveInterval time.Duration `json:"keep_alive_interval"`
+	PersistentKeepAliveInterval time.Duration `json:"keep_alive_interval,omitempty"`
 	// WireGuard peer allowed IPs
 	AllowedIPs []net.IPNet `json:"allowed_ips"`
 }
