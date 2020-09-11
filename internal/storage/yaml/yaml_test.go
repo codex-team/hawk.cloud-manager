@@ -10,7 +10,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-var YamlStorage_Load_File = `
+var loadFile = `
 hosts:
   - name: test-host
     public_key: TESTPUB
@@ -21,16 +21,17 @@ groups:
     hosts:
       - test-host`
 
-func TestYamlStorage_Load(t *testing.T) {
+// TestLoad tests loading config to YamlStorage
+func TestLoad(t *testing.T) {
 	expected := config.PeerConfig{}
 
-	err := yaml.Unmarshal([]byte(YamlStorage_Load_File), &expected)
+	err := yaml.Unmarshal([]byte(loadFile), &expected)
 	require.Nil(t, err)
 
 	tmpfile, err := ioutil.TempFile("", "yaml_load")
 	require.Nil(t, err)
 
-	_, err = tmpfile.WriteString(YamlStorage_Load_File)
+	_, err = tmpfile.WriteString(loadFile)
 	require.Nil(t, err)
 
 	yamlStorage := NewYamlStorage(tmpfile.Name())

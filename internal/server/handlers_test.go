@@ -50,12 +50,14 @@ var (
 	router = srv.setupRouter()
 )
 
+// initTests initializes Server fields
 func initTests() (err error) {
 	srv.apiConf, err = cfg.ToAPIConf()
 	srv.storage.Set(cfg)
 	return
 }
 
+// performRequest mocks HTTP requests
 func performRequest(r http.Handler, method, path string, body io.Reader) *httptest.ResponseRecorder {
 	req, _ := http.NewRequest(method, path, body)
 	w := httptest.NewRecorder()
@@ -64,8 +66,11 @@ func performRequest(r http.Handler, method, path string, body io.Reader) *httpte
 	return w
 }
 
+// TestTopology tests getting WireGuard configuration
 func TestTopology(t *testing.T) {
 	require.Nil(t, initTests())
+
+	// simple case
 	t.Run("simple", func(t *testing.T) {
 		body, err := json.Marshal(requestBody)
 		require.Nil(t, err)
@@ -84,6 +89,7 @@ func TestTopology(t *testing.T) {
 		require.Equal(t, expected, actual)
 	})
 
+	// sending unknown public key
 	t.Run("unknown public key", func(t *testing.T) {
 		requestBody.PublicKey = "yAnz5TF+lXXJte14tji3zlMNq+hd2rYUIgJBgB3fBmk="
 		body, err := json.Marshal(requestBody)
@@ -95,7 +101,9 @@ func TestTopology(t *testing.T) {
 	})
 }
 
+// TestConfig tests getting Peer Config
 func TestConfig(t *testing.T) {
+	// simple case
 	t.Run("simple", func(t *testing.T) {
 		w := performRequest(router, "GET", "/config", nil)
 		require.Equal(t, http.StatusOK, w.Code)
@@ -110,7 +118,9 @@ func TestConfig(t *testing.T) {
 	})
 }
 
+// TestUpdate tests updating PeerConfig
 func TestUpdateConfig(t *testing.T) {
+	// simple case
 	t.Run("simple", func(t *testing.T) {
 		cfgPatch := cfg
 		cfgPatch.Hosts = append(cfgPatch.Hosts, config.Host{

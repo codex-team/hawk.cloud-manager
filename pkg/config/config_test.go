@@ -8,7 +8,9 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+// TestCalendarConfig tests parsing PeerConfig
 func TestCalendarConfig(t *testing.T) {
+	// simple case
 	t.Run("simple", func(t *testing.T) {
 		cfg := PeerConfig{
 			Hosts: []Host{
