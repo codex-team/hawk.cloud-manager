@@ -3,15 +3,15 @@ package server
 import (
 	"net/http"
 
+	"github.com/codex-team/hawk.cloud-manager/internal/storage"
 	"github.com/codex-team/hawk.cloud-manager/pkg/api"
-	"github.com/codex-team/hawk.cloud-manager/pkg/config"
 	"github.com/gin-gonic/gin"
 )
 
 // Server is struct that wraps HTTP server and contains current configuration
 type Server struct {
-	// Peer config
-	config *config.PeerConfig
+	// Storage
+	storage storage.Storage
 	// WireGuard config
 	apiConf *api.Conf
 	// HTTP server
@@ -19,15 +19,15 @@ type Server struct {
 }
 
 // New creates Server and returns pointer to it
-func New(addr string, config *config.PeerConfig) (*Server, error) {
+func New(addr string, st storage.Storage) (*Server, error) {
 	var server = &Server{
-		config: config,
+		storage: st,
 		http: &http.Server{
 			Addr: addr,
 		},
 	}
 	server.http.Handler = server.setupRouter()
-	apiConf, err := (*server.config).ToAPIConf()
+	apiConf, err := (*st.Get()).ToAPIConf()
 	if err != nil {
 		return nil, err
 	}
@@ -40,7 +40,10 @@ func New(addr string, config *config.PeerConfig) (*Server, error) {
 func (s *Server) setupRouter() *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
+
 	r.POST("/topology", s.handleTopology)
+	r.GET("/config", s.handleConfig)
+	r.PUT("/config", s.handleUpdate)
 
 	return r
 }

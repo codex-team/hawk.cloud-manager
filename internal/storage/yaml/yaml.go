@@ -58,3 +58,8 @@ func (s *YamlStorage) Save() error {
 
 	return nil
 }
+
+// Set updates stored Peer Config
+func (s *YamlStorage) Set(conf config.PeerConfig) {
+	s.config = conf
+}
