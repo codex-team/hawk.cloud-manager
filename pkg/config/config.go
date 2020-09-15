@@ -33,7 +33,7 @@ func (p *PeerConfig) ToAPIConf() (*api.Conf, error) {
 	}
 
 	for _, h := range p.Hosts {
-		err := api.ParseKey(h.PublicKey)
+		err := api.CheckKeyFormat(h.PublicKey)
 		if err != nil {
 			return nil, err
 		}

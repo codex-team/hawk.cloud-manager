@@ -38,8 +38,8 @@ type Creds struct {
 	Signature string `json:"signature"`
 }
 
-// ParseKey checks if public key is valid
-func ParseKey(s string) error {
+// CheckKeyFormat checks if public key is valid
+func CheckKeyFormat(s string) error {
 	key, err := base64.StdEncoding.DecodeString(s)
 	if err != nil {
 		return fmt.Errorf("failed to parse base64-encoded key: %v", err)

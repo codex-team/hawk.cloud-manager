@@ -34,7 +34,7 @@ func TestCalendarConfig(t *testing.T) {
 		}
 
 		key := "cXdlcnRydGV3cnd0cnRxcnFlcnFydHRydHJ5dXlyZXE="
-		err := api.ParseKey(key)
+		err := api.CheckKeyFormat(key)
 		require.Nil(t, err)
 
 		_, ipnet1, err := net.ParseCIDR("10.11.0.1/24")
