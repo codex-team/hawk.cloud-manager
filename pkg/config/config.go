@@ -33,7 +33,7 @@ func (p *PeerConfig) ToAPIConf() (*api.Conf, error) {
 	}
 
 	for _, h := range p.Hosts {
-		key, err := api.NewKey(h.PublicKey)
+		err := api.ParseKey(h.PublicKey)
 		if err != nil {
 			return nil, err
 		}
@@ -47,7 +47,7 @@ func (p *PeerConfig) ToAPIConf() (*api.Conf, error) {
 		}
 
 		cf.Peers = append(cf.Peers, api.Peer{
-			PublicKey:  key,
+			PublicKey:  h.PublicKey,
 			Endpoint:   h.Endpoint,
 			AllowedIPs: ips,
 		})

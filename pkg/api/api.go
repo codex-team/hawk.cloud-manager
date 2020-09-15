@@ -11,12 +11,9 @@ import (
 
 const KeyLen = wg.KeyLen
 
-// Key is base64-encoded byte array that is 32 bytes long
-type Key [KeyLen]byte
-
 type Peer struct {
-	// WireGuard peer public key
-	PublicKey Key `json:"public_key"`
+	// WireGuard peer public key (a base64-encoded string that is 32 bytes long)
+	PublicKey string `json:"public_key"`
 	// WireGuard peer endpoint
 	Endpoint string `json:"endpoint,omitempty"`
 	// WireGuard peer keep alive interval
@@ -41,22 +38,15 @@ type Creds struct {
 	Signature string `json:"signature"`
 }
 
-// NewKey parses a Key from a string
-func NewKey(s string) (Key, error) {
-	key := Key{}
-	b, err := base64.StdEncoding.DecodeString(s)
+// ParseKey checks if public key is valid
+func ParseKey(s string) error {
+	key, err := base64.StdEncoding.DecodeString(s)
 	if err != nil {
-		return key, fmt.Errorf("failed to parse base64-encoded key: %v", err)
+		return fmt.Errorf("failed to parse base64-encoded key: %v", err)
 	}
-	if len(b) != KeyLen {
-		return key, fmt.Errorf("incorrect key size: %d", len(b))
+	if len(key) != KeyLen {
+		return fmt.Errorf("incorrect key size: %d", len(key))
 	}
-	copy(key[:], b)
 
-	return key, nil
-}
-
-// String returns string representation of Key
-func (k Key) String() string {
-	return base64.StdEncoding.EncodeToString(k[:])
+	return nil
 }
