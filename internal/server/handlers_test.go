@@ -2,12 +2,10 @@ package server
 
 import (
 	"bytes"
-	"encoding/base64"
 	"encoding/json"
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"strconv"
 	"testing"
 
 	"github.com/codex-team/hawk.cloud-manager/internal/storage/yaml"
@@ -81,12 +79,7 @@ func TestTopology(t *testing.T) {
 		expected, err := json.Marshal(srv.apiConf)
 		require.Nil(t, err)
 
-		strBody, err := strconv.Unquote(w.Body.String())
-		require.Nil(t, err)
-		actual, err := base64.StdEncoding.DecodeString(strBody)
-		require.Nil(t, err)
-
-		require.Equal(t, expected, actual)
+		require.Equal(t, string(expected), w.Body.String())
 	})
 
 	// sending unknown public key
@@ -109,12 +102,8 @@ func TestConfig(t *testing.T) {
 		require.Equal(t, http.StatusOK, w.Code)
 		expected, err := json.Marshal(cfg)
 		require.Nil(t, err)
-		strBody, err := strconv.Unquote(w.Body.String())
-		require.Nil(t, err)
-		actual, err := base64.StdEncoding.DecodeString(strBody)
-		require.Nil(t, err)
 
-		require.Equal(t, expected, actual)
+		require.Equal(t, string(expected), w.Body.String())
 	})
 }
 

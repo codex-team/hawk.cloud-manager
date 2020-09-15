@@ -28,12 +28,7 @@ func (s *Server) handleTopology(c *gin.Context) {
 	// Check public key
 	for _, h := range (*s.storage.Get()).Hosts {
 		if h.PublicKey == creds.PublicKey {
-			respBody, err := json.Marshal(*s.apiConf)
-			if err != nil {
-				c.JSON(http.StatusInternalServerError, gin.H{"failed to write response": err.Error()})
-				return
-			}
-			c.JSON(http.StatusOK, respBody)
+			c.JSON(http.StatusOK, *s.apiConf)
 			return
 		}
 	}
@@ -43,12 +38,7 @@ func (s *Server) handleTopology(c *gin.Context) {
 
 // handleConfig returns current Peer Config
 func (s *Server) handleConfig(c *gin.Context) {
-	resp, err := json.Marshal(*s.storage.Get())
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"failed to marshal config": err.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, resp)
+	c.JSON(http.StatusOK, *s.storage.Get())
 }
 
 // handleUpdate updates Peer Config with received data
