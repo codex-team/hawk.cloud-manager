@@ -19,4 +19,4 @@ int:
 	docker-compose -f tests/docker-compose-test.yaml down ;\
 	exit $$test_status_code ;\
 
-.PHONY: manager agent test lint
+.PHONY: manager agent test ut int
