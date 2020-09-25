@@ -4,16 +4,13 @@ import (
 	"net/http"
 
 	"github.com/codex-team/hawk.cloud-manager/internal/storage"
-	"github.com/codex-team/hawk.cloud-manager/pkg/api"
 	"github.com/gin-gonic/gin"
 )
 
 // Server is struct that wraps HTTP server and contains current configuration
 type Server struct {
-	// Storage
+	// Storage of configs
 	storage storage.Storage
-	// WireGuard config
-	apiConf *api.Conf
 	// HTTP server
 	http *http.Server
 }
@@ -27,11 +24,6 @@ func New(addr string, st storage.Storage) (*Server, error) {
 		},
 	}
 	server.http.Handler = server.setupRouter()
-	apiConf, err := (*st.Get()).ToAPIConf()
-	if err != nil {
-		return nil, err
-	}
-	server.apiConf = apiConf
 
 	return server, nil
 }

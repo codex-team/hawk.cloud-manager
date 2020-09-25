@@ -1,0 +1,9 @@
+FROM    golang:1.14.7-alpine3.12
+ENV     GO111MODULE=on
+WORKDIR /cloud-manager
+COPY    go.mod .
+COPY    go.sum .
+RUN     go mod download
+COPY    . .
+RUN     go build ./cmd/manager/main.go
+ENTRYPOINT ["./main"]

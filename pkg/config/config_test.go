@@ -1,7 +1,6 @@
 package config
 
 import (
-	"net"
 	"testing"
 
 	"github.com/codex-team/hawk.cloud-manager/pkg/api"
@@ -21,7 +20,7 @@ func TestCalendarConfig(t *testing.T) {
 				},
 				{
 					Name:       "hawk-workers",
-					PublicKey:  "cXdlcnRydGV3cnd0cnRxcnFlcnFydHRydHJ5dXlyZXE=",
+					PublicKey:  "yAnz5TF+lXXJte14tji3zlMNq+hd2rYUIgJBgB3fBmk=",
 					AllowedIPs: []string{"10.11.0.2/24"},
 				},
 			},
@@ -37,25 +36,16 @@ func TestCalendarConfig(t *testing.T) {
 		err := api.CheckKeyFormat(key)
 		require.Nil(t, err)
 
-		_, ipnet1, err := net.ParseCIDR("10.11.0.1/24")
-		require.Nil(t, err)
-		_, ipnet2, err := net.ParseCIDR("10.11.0.2/24")
-		require.Nil(t, err)
-
 		expected := api.Conf{
 			Peers: []api.Peer{
 				{
 					PublicKey:  key,
-					AllowedIPs: []net.IPNet{*ipnet1},
-				},
-				{
-					PublicKey:  key,
-					AllowedIPs: []net.IPNet{*ipnet2},
+					AllowedIPs: []string{"10.11.0.1/24"},
 				},
 			},
 		}
 
-		apiConf, err := cfg.ToAPIConf()
+		apiConf, err := cfg.ToAPIConf("yAnz5TF+lXXJte14tji3zlMNq+hd2rYUIgJBgB3fBmk=")
 		require.Nil(t, err)
 		require.Equal(t, expected, *apiConf)
 	})

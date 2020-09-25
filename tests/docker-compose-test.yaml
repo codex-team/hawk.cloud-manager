@@ -1,0 +1,69 @@
+version: '3.3'
+services:
+  integration_tests:
+    container_name: integration_tests
+    build: integration_tests
+    command: "true"
+    depends_on:
+      - manager
+      - agent_1
+      - agent_2
+    networks:
+      - test
+
+  manager:
+    container_name: manager
+    hostname: manager
+    build:
+      context: ../
+      dockerfile: ./tests/Dockerfile_manager
+    volumes:
+      - ${PWD}/tests/config.yaml:/cloud-manager/examples/config.yaml
+    ports:
+        - "50051"
+    restart: on-failure
+    networks:
+      - test
+
+  agent_1:
+    container_name: agent1
+    hostname: agent1
+    build:
+      context: ../
+      dockerfile: ./tests/Dockerfile_agent
+      args:
+        - WGPUBLICKEY=yAnz5TF+lXXJte14tji3zlMNq+hd2rYUIgJBgB3fBmk=
+        - WGPRIVATEKEY=HIgo9xNzJMWLKASShiTqIybxZ0U3wGLiUeJ1PKf8ykw=
+    ports:
+        - "12345"
+    restart: on-failure
+    depends_on:
+      - manager
+    networks:
+      test:
+        ipv4_address: 10.5.0.5
+
+  agent_2:
+    container_name: agent2
+    hostname: agent2
+    build:
+      context: ../
+      dockerfile: ./tests/Dockerfile_agent
+      args:
+        - WGPUBLICKEY=cXdlcnFld3RyZ3dydHd2cnd0cnRuYnJlcXdlcnFxd3Q=
+        - WGPRIVATEKEY=xTIBA5rboUvnH4htodjb6e697QjLERt1NAB4mZqp8Dg=
+    ports:
+        - "12346"
+    restart: on-failure
+    depends_on:
+      - manager
+    networks:
+      test:
+        ipv4_address: 10.5.0.6
+
+networks:
+  test:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 10.5.0.0/16
