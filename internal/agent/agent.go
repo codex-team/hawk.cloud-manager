@@ -155,8 +155,17 @@ func (a *Agent) save(conf string) error {
 
 // apply applies WireGuard configuration
 func (a *Agent) apply() error {
-	cmd := exec.Command("wg", "setconf", "wg0", a.configFile)
 	var stderr bytes.Buffer
+
+	// start interface
+	cmd := exec.Command("wg-quick", "up", "wg0")
+	cmd.Stderr = &stderr
+	if err := cmd.Run(); err != nil {
+		return fmt.Errorf("failed to start WireGuard interface: %s", stderr.String())
+	}
+
+	// apply config
+	cmd = exec.Command("wg", "setconf", "wg0", a.configFile)
 	cmd.Stderr = &stderr
 	if err := cmd.Run(); err != nil {
 		return fmt.Errorf("failed to apply WireGuard configuration: %s", stderr.String())

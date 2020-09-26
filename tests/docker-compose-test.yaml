@@ -36,6 +36,12 @@ services:
         - WGPRIVATEKEY=HIgo9xNzJMWLKASShiTqIybxZ0U3wGLiUeJ1PKf8ykw=
     ports:
         - "12345"
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    privileged: true
+    volumes:
+      - /lib/modules:/lib/modules
     restart: on-failure
     depends_on:
       - manager
@@ -54,6 +60,12 @@ services:
         - WGPRIVATEKEY=xTIBA5rboUvnH4htodjb6e697QjLERt1NAB4mZqp8Dg=
     ports:
         - "12346"
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    privileged: true
+    volumes:
+      - /lib/modules:/lib/modules
     restart: on-failure
     depends_on:
       - manager
