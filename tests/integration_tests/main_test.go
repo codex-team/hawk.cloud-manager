@@ -92,10 +92,22 @@ func (test *updateConfigTest) iReceiveData(data *messages.PickleStepArgument_Pic
 	return nil
 }
 
+func (test *updateConfigTest) iSendRequestTo(addr string) error {
+	resp, err := http.Get(addr)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	test.responseStatusCode = resp.StatusCode
+
+	return nil
+}
+
 func FeatureContext(s *godog.Suite) {
 	test := new(updateConfigTest)
 
 	s.Step(`^I send (POST|PUT) request to "([^"]*)" with data:$`, test.iSendRequestToWithData)
 	s.Step(`^The response code should be (\d+)$`, test.theResponseCodeShouldBe)
 	s.Step(`^I receive data:$`, test.iReceiveData)
+	s.Step(`^I send request to "([^"]*)"$`, test.iSendRequestTo)
 }

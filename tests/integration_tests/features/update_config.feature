@@ -7,15 +7,15 @@ Feature: Update WireGuard config
       "hosts": [
         {
           "name": "agent1",
-          "public_key": "yAnz5TF+lXXJte14tji3zlMNq+hd2rYUIgJBgB3fBmk=",
+          "public_key": "4Gm9s4KcYsSvikhJ0Tj4a60jQFI25QJVrYsJaQw0dgo=",
           "endpoint": "10.5.0.5:12345",
-          "allowed_ips": ["0.0.0.0/0"]
+          "allowed_ips": ["10.5.0.0/32"]
         },
         {
           "name": "agent2",
-          "public_key": "cXdlcnFld3RyZ3dydHd2cnd0cnRuYnJlcXdlcnFxd3Q=",
+          "public_key": "AZKH1M4ELjbgTLMgcf8rC4kf9CjS5qtXSn0xObgSqWc=",
           "endpoint": "10.5.0.6:12346",
-          "allowed_ips": ["10.0.0.0/32", "234.122.178.0/32"]
+          "allowed_ips": ["10.5.0.0/32"]
         }
       ],
       "groups": [
@@ -30,7 +30,7 @@ Feature: Update WireGuard config
     When I send POST request to "/topology" with data:
     """
     {
-      "public_key": "yAnz5TF+lXXJte14tji3zlMNq+hd2rYUIgJBgB3fBmk="
+      "public_key": "4Gm9s4KcYsSvikhJ0Tj4a60jQFI25QJVrYsJaQw0dgo="
     }
     """
     Then The response code should be 200
@@ -40,9 +40,9 @@ Feature: Update WireGuard config
       "listen_port": 12345,
       "peers": [
         {
-          "public_key": "cXdlcnFld3RyZ3dydHd2cnd0cnRuYnJlcXdlcnFxd3Q=",
+          "public_key": "AZKH1M4ELjbgTLMgcf8rC4kf9CjS5qtXSn0xObgSqWc=",
           "endpoint": "10.5.0.6:12346",
-          "allowed_ips": ["10.0.0.0/32", "234.122.178.0/32"]
+          "allowed_ips": ["10.5.0.0/32"]
         }
       ]
     }
