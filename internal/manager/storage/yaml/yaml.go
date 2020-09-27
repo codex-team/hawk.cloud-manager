@@ -3,7 +3,7 @@ package yaml
 import (
 	"io/ioutil"
 
-	"github.com/codex-team/hawk.cloud-manager/internal/storage"
+	"github.com/codex-team/hawk.cloud-manager/internal/manager/storage"
 	"github.com/codex-team/hawk.cloud-manager/pkg/config"
 	"gopkg.in/yaml.v2"
 )

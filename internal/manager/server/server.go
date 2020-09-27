@@ -3,7 +3,7 @@ package server
 import (
 	"net/http"
 
-	"github.com/codex-team/hawk.cloud-manager/internal/storage"
+	"github.com/codex-team/hawk.cloud-manager/internal/manager/storage"
 	"github.com/gin-gonic/gin"
 )
 

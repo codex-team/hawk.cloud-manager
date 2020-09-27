@@ -8,7 +8,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/codex-team/hawk.cloud-manager/internal/storage/yaml"
+	"github.com/codex-team/hawk.cloud-manager/internal/manager/storage/yaml"
 	"github.com/codex-team/hawk.cloud-manager/pkg/api"
 	"github.com/codex-team/hawk.cloud-manager/pkg/config"
 	"github.com/stretchr/testify/require"
