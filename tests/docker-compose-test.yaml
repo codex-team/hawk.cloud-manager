@@ -1,0 +1,53 @@
+version: '3.3'
+services:
+  integration_tests:
+    container_name: integration_tests
+    build: 
+      context: ./integration_tests
+    command: "true"
+    depends_on:
+      - manager
+      - agent
+    networks:
+      - test
+
+  manager:
+    container_name: manager
+    hostname: manager
+    build:
+      context: ../
+      dockerfile: ./tests/Dockerfile_manager
+    volumes:
+      - ${PWD}/tests/config.yaml:/cloud-manager/examples/config.yaml
+    ports:
+        - "50051"
+    restart: on-failure
+    networks:
+     - test
+
+  agent:
+    container_name: agent
+    hostname: agent
+    build:
+      context: ../
+      dockerfile: ./tests/Dockerfile_agent
+      args:
+        - WGPUBLICKEY=4Gm9s4KcYsSvikhJ0Tj4a60jQFI25QJVrYsJaQw0dgo=
+        - WGPRIVATEKEY=OM2KE7KGk64ibDavlCLK7ROMSSwuxktlJxVnUBnJmGM=
+    ports:
+        - "12345"
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    privileged: true
+    volumes:
+      - /lib/modules:/lib/modules
+    restart: on-failure
+    depends_on:
+      - manager
+    networks:
+      - test
+
+networks:
+  test:
+    driver: bridge

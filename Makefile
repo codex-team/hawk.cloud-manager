@@ -7,7 +7,10 @@ manager:
 agent:
 	go build -o $(AGENT_CMD) ./cmd/agent/main.go
 
-test:
+ut:
 	go test -v -count=1 -race -gcflags=-l -timeout=30s ./...
 
-.PHONY: manager agent test
+int:
+	./tests/test.sh
+	
+.PHONY: manager agent test ut int
