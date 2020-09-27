@@ -9,13 +9,13 @@ Feature: Update WireGuard config
           "name": "agent1",
           "public_key": "yAnz5TF+lXXJte14tji3zlMNq+hd2rYUIgJBgB3fBmk=",
           "endpoint": "10.5.0.5:12345",
-          "allowed_ips": ["10.5.0.0/16"]
+          "allowed_ips": ["0.0.0.0/0"]
         },
         {
           "name": "agent2",
           "public_key": "cXdlcnFld3RyZ3dydHd2cnd0cnRuYnJlcXdlcnFxd3Q=",
           "endpoint": "10.5.0.6:12346",
-          "allowed_ips": ["10.5.0.0/16", "234.122.178.0/32"]
+          "allowed_ips": ["10.0.0.0/32", "234.122.178.0/32"]
         }
       ],
       "groups": [
@@ -42,7 +42,7 @@ Feature: Update WireGuard config
         {
           "public_key": "cXdlcnFld3RyZ3dydHd2cnd0cnRuYnJlcXdlcnFxd3Q=",
           "endpoint": "10.5.0.6:12346",
-          "allowed_ips": ["10.5.0.0/16", "234.122.178.0/32"]
+          "allowed_ips": ["10.0.0.0/32", "234.122.178.0/32"]
         }
       ]
     }

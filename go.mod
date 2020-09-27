@@ -1,6 +1,6 @@
 module github.com/codex-team/hawk.cloud-manager
 
-go 1.14
+go 1.15
 
 require (
 	github.com/gin-gonic/gin v1.6.3

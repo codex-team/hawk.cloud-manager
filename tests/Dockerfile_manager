@@ -1,4 +1,4 @@
-FROM    golang:1.14.7-alpine3.12
+FROM    golang:1.15.2-alpine
 ENV     GO111MODULE=on
 WORKDIR /cloud-manager
 COPY    go.mod .

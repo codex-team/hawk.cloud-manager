@@ -39,6 +39,7 @@ services:
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
+    privileged: true
     volumes:
       - /lib/modules:/lib/modules
     restart: on-failure
@@ -62,6 +63,7 @@ services:
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
+    privileged: true
     volumes:
       - /lib/modules:/lib/modules
     restart: on-failure

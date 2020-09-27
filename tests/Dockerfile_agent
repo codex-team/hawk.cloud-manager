@@ -10,7 +10,7 @@ RUN apt-get update && \
  apt-get install -y --no-install-recommends wireguard-tools wget ca-certificates iptables nano net-tools procps openresolv && \
  apt-get clean
 
-RUN wget https://dl.google.com/go/go1.14.6.linux-amd64.tar.gz && tar xf go1.14.6.linux-amd64.tar.gz && mv go /usr/local
+RUN wget https://dl.google.com/go/go1.15.2.linux-amd64.tar.gz && tar xf go1.15.2.linux-amd64.tar.gz && mv go /usr/local
 
 RUN KVER=`uname -r`
 RUN apt-get install -y linux-headers-$KVER && apt-get install -y --no-install-recommends wireguard-dkms bc
