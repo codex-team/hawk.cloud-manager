@@ -22,10 +22,9 @@ ListenPort = {{ .Config.ListenPort }}
 PublicKey = {{ .PublicKey }}
 Endpoint = {{ .Endpoint }}
 AllowedIPs = {{ formatArray .AllowedIPs }}
-{{ end }}
-`
+{{ end }}`
 
-// Agent is service running on target host, responsible for applying WireGuard configuration on host
+// Agent is a service running on target host, responsible for applying WireGuard configuration on host
 type Agent struct {
 	// CloudManager address
 	managerAddress string
@@ -69,7 +68,7 @@ func (a *Agent) parseWGConf() (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("failed to parse config: %w", err)
 	}
-	return strings.TrimSuffix(conf.String(), "\n\n"), nil
+	return strings.TrimSuffix(conf.String(), "\n"), nil
 }
 
 // queryConf retrieves latest WireGuard configuration from Manager
@@ -110,7 +109,7 @@ func (a *Agent) queryConf() (*api.Conf, error) {
 	return &apiConf, nil
 }
 
-// PullNewConf updates Wireguard configuration on host if it has changed
+// PullNewConf updates WireGuard configuration on host if it has changed
 func (a *Agent) PullNewConf() error {
 	conf, err := a.queryConf()
 	if err != nil {

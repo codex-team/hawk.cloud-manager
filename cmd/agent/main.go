@@ -32,7 +32,12 @@ func init() {
 	flag.StringVar(&managerAddress, "manager", "http://manager:50051", "CloudManager address")
 	flag.StringVar(&pubKeyFile, "pubkey", "agent_pubKey", "path to file with public key")
 	flag.StringVar(&privKeyFile, "privkey", "agent_privKey", "path to file with private key")
-	flag.DurationVar(&interval, "interval", time.Minute, "time inteval to check config changes")
+	flag.DurationVar(&interval, "interval", time.Minute, "time interval to check config changes")
+}
+
+// formatKey returns key string without newlines
+func formatKey(key []byte) string {
+	return strings.Replace(strings.Replace(string(key), "\n", "", -1), " ", "", -1)
 }
 
 func main() {
@@ -52,7 +57,7 @@ func main() {
 	}
 
 	// Create agent
-	agent, err := agent.New(managerAddress, configFile, strings.Replace(string(pubKeyData), "\n", "", -1), strings.Replace(string(privKeyData), "\n", "", -1))
+	agentInstance, err := agent.New(managerAddress, configFile, formatKey(pubKeyData), formatKey(privKeyData))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -63,7 +68,7 @@ func main() {
 
 	log.Println("starting agent")
 
-	err = agent.PullNewConf()
+	err = agentInstance.PullNewConf()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -82,7 +87,7 @@ func main() {
 			}
 			stop = true
 		case <-ticker.C:
-			errs <- agent.PullNewConf()
+			errs <- agentInstance.PullNewConf()
 		}
 	}
 }
