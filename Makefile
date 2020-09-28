@@ -10,6 +10,7 @@ agent:
 ut:
 	go test -v -count=1 -race -gcflags=-l -timeout=30s ./...
 
+int: SHELL:=/bin/bash
 int:
 	set -xeuo pipefail;\
 	docker-compose -f tests/docker-compose-test.yaml up --build -d;\
