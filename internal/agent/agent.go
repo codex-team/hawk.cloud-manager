@@ -154,20 +154,40 @@ func (a *Agent) save(conf string) error {
 
 // apply applies WireGuard configuration
 func (a *Agent) apply() error {
-	var stderr bytes.Buffer
+	if err := setConf(a.configFile); err != nil {
+		if strings.Contains(err.Error(), "No such device") {
+			err = startIface()
+			if err != nil {
+				return err
+			}
+			return setConf(a.configFile)
+		}
+		return err
+	}
 
-	// start interface
+	return nil
+}
+
+// setConf executes `wg setconf` command
+func setConf(configFile string) error {
+	var stderr bytes.Buffer
+	cmd := exec.Command("wg", "setconf", "wg0", configFile)
+	cmd.Stderr = &stderr
+	if err := cmd.Run(); err != nil {
+		return fmt.Errorf("failed to apply WireGuard configuration: %s", stderr.String())
+	}
+
+	return nil
+}
+
+// startIface starts WireGuard interface
+func startIface() error {
+	var stderr bytes.Buffer
 	cmd := exec.Command("wg-quick", "up", "wg0")
 	cmd.Stderr = &stderr
 	if err := cmd.Run(); err != nil {
 		return fmt.Errorf("failed to start WireGuard interface: %s", stderr.String())
 	}
 
-	// apply config
-	cmd = exec.Command("wg", "setconf", "wg0", a.configFile)
-	cmd.Stderr = &stderr
-	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("failed to apply WireGuard configuration: %s", stderr.String())
-	}
 	return nil
 }
