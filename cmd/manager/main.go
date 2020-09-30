@@ -7,8 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/codex-team/hawk.cloud-manager/internal/server"
-	"github.com/codex-team/hawk.cloud-manager/internal/storage/yaml"
+	"github.com/codex-team/hawk.cloud-manager/internal/manager/server"
+	"github.com/codex-team/hawk.cloud-manager/internal/manager/storage/yaml"
 )
 
 var (

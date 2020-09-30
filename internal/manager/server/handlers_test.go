@@ -8,7 +8,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/codex-team/hawk.cloud-manager/internal/storage/yaml"
+	"github.com/codex-team/hawk.cloud-manager/internal/manager/storage/yaml"
 	"github.com/codex-team/hawk.cloud-manager/pkg/api"
 	"github.com/codex-team/hawk.cloud-manager/pkg/config"
 	"github.com/stretchr/testify/require"
@@ -20,12 +20,14 @@ var (
 			{
 				Name:       "hawk-collector",
 				PublicKey:  "cXdlcnRydGV3cnd0cnRxcnFlcnFydHRydHJ5dXlyZXE=",
-				AllowedIPs: []string{"10.11.0.1/24"},
+				Endpoint:   "10.11.0.2:1234",
+				AllowedIPs: []string{"10.11.0.0/24"},
 			},
 			{
 				Name:       "hawk-workers",
-				PublicKey:  "cXdlcnRydGV3cnd0cnRxcnFlcnFydHRydHJ5dXlyZXE=",
-				AllowedIPs: []string{"10.11.0.2/24"},
+				PublicKey:  "yAnz5TF+lXXJte14tji3zlMNq+hd2rYUIgJBgB3fBmk=",
+				Endpoint:   "10.11.0.5:9823",
+				AllowedIPs: []string{"10.11.0.0/24"},
 			},
 		},
 		Groups: []config.Group{
@@ -42,7 +44,6 @@ var (
 
 	requestBody = api.Creds{
 		PublicKey: "cXdlcnRydGV3cnd0cnRxcnFlcnFydHRydHJ5dXlyZXE=",
-		Signature: "yAnz5TF+lXXJte14tji3zlMNq+hd2rYUIgJBgB3fBmk=",
 	}
 
 	router = srv.setupRouter()
@@ -50,7 +51,6 @@ var (
 
 // initTests initializes Server fields
 func initTests() (err error) {
-	srv.apiConf, err = cfg.ToAPIConf()
 	srv.storage.Set(cfg)
 	return
 }
@@ -76,7 +76,10 @@ func TestTopology(t *testing.T) {
 		w := performRequest(router, "POST", "/topology", bytes.NewReader(body))
 		require.Equal(t, http.StatusOK, w.Code)
 
-		expected, err := json.Marshal(srv.apiConf)
+		wgConf, err := cfg.ToAPIConf(requestBody.PublicKey)
+		require.Nil(t, err)
+
+		expected, err := json.Marshal(*wgConf)
 		require.Nil(t, err)
 
 		require.Equal(t, string(expected), w.Body.String())
@@ -84,13 +87,13 @@ func TestTopology(t *testing.T) {
 
 	// sending unknown public key
 	t.Run("unknown public key", func(t *testing.T) {
-		requestBody.PublicKey = "yAnz5TF+lXXJte14tji3zlMNq+hd2rYUIgJBgB3fBmk="
+		requestBody.PublicKey = "cnRnaGdmamVkZmdoYndzcmVnd2VyZ2hidHl0cmV5anJx"
 		body, err := json.Marshal(requestBody)
 		require.Nil(t, err)
 
 		w := performRequest(router, "POST", "/topology", bytes.NewReader(body))
 		require.Equal(t, http.StatusBadRequest, w.Code)
-		require.Equal(t, `{"error":"unknown public key"}`, w.Body.String())
+		require.Equal(t, `{"failed to get config":"unknown public key"}`, w.Body.String())
 	})
 }
 
@@ -114,8 +117,8 @@ func TestUpdateConfig(t *testing.T) {
 		cfgPatch := cfg
 		cfgPatch.Hosts = append(cfgPatch.Hosts, config.Host{
 			Name:       "hawk-admin",
-			PublicKey:  "yAnz5TF+lXXJte14tji3zlMNq+hd2rYUIgJBgB3fBmk=",
-			Endpoint:   "172.17.123.13",
+			PublicKey:  "cnRnaGdmamVkZmdoYndzcmVnd2VyZ2hidHl0cmV5anJx",
+			Endpoint:   "172.17.123.13:3435",
 			AllowedIPs: []string{"10.11.0.77/32"},
 		})
 		body, err := json.Marshal(cfgPatch)

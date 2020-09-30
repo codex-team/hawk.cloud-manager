@@ -1,0 +1,16 @@
+hosts:
+- name: agent1
+  public_key: 4Gm9s4KcYsSvikhJ0Tj4a60jQFI25QJVrYsJaQw0dgo=
+  endpoint: 10.5.0.5:12345
+  allowed_ips:
+  - 10.5.0.0/32
+- name: agent2
+  public_key: AZKH1M4ELjbgTLMgcf8rC4kf9CjS5qtXSn0xObgSqWc=
+  endpoint: 10.5.0.6:12346
+  allowed_ips:
+  - 10.5.0.0/32
+groups:
+- name: test-group
+  hosts:
+  - agent1
+  - agent2

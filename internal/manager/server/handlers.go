@@ -25,15 +25,13 @@ func (s *Server) handleTopology(c *gin.Context) {
 		return
 	}
 
-	// Check public key
-	for _, h := range (*s.storage.Get()).Hosts {
-		if h.PublicKey == creds.PublicKey {
-			c.JSON(http.StatusOK, *s.apiConf)
-			return
-		}
+	conf, err := (*s.storage.Get()).ToAPIConf(creds.PublicKey)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"failed to get config": err.Error()})
+		return
 	}
 
-	c.JSON(http.StatusBadRequest, gin.H{"error": "unknown public key"})
+	c.JSON(http.StatusOK, *conf)
 }
 
 // handleConfig returns current Peer Config
@@ -60,11 +58,6 @@ func (s *Server) handleUpdate(c *gin.Context) {
 	err = s.storage.Save()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"failed to save config": err.Error()})
-		return
-	}
-	s.apiConf, err = cfgPatch.ToAPIConf()
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"failed to convert config": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, nil)

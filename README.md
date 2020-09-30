@@ -21,9 +21,20 @@ $ make
 $ ./manager -addr <address to listen, format: 0.0.0.0:50051> -config /path/to/config.yaml
 ```
 
-Run tests:
+Run agent:
 ```shell
-$ make test
+$ make agent
+$ ./agent -config /path/to/store/config -manager <cloud-manager address, format: 0.0.0.0:50051> -pubkey /path/to/public/key -privkey /path/to/private/key -interval <time interval to check config changes, format: 5s>
+```
+
+Run integration tests:
+```shell
+$ make int
+```
+
+Run unit tests:
+```shell
+$ make ut
 ```
 
 ## Roadmap

@@ -1,9 +1,17 @@
 package config
 
 import (
+	"errors"
 	"net"
+	"strconv"
+	"strings"
 
 	"github.com/codex-team/hawk.cloud-manager/pkg/api"
+)
+
+var (
+	ErrNoPeers          = errors.New("no peers found in config")
+	ErrUnknownPublicKey = errors.New("unknown public key")
 )
 
 // Host is information about a host included in PeerConfig
@@ -27,30 +35,49 @@ type PeerConfig struct {
 }
 
 // ToAPIConf converts PeerConfig to api.Conf
-func (p *PeerConfig) ToAPIConf() (*api.Conf, error) {
+func (p *PeerConfig) ToAPIConf(publicKey string) (*api.Conf, error) {
 	cf := api.Conf{
 		Peers: []api.Peer{},
 	}
 
+	publicKeyFound := false
 	for _, h := range p.Hosts {
 		err := api.CheckKeyFormat(h.PublicKey)
 		if err != nil {
 			return nil, err
 		}
-		ips := make([]net.IPNet, len(h.AllowedIPs))
-		for i, cidr := range h.AllowedIPs {
-			_, ipnet, err := net.ParseCIDR(cidr)
+		if h.PublicKey == publicKey {
+			publicKeyFound = true
+			port := strings.Split(h.Endpoint, ":")
+			if len(port) == 2 {
+				listenPort, err := strconv.ParseInt(port[1], 10, 64)
+				if err != nil {
+					return nil, err
+				}
+				cf.ListenPort = int(listenPort)
+			}
+			continue
+		}
+		for _, cidr := range h.AllowedIPs {
+			_, _, err := net.ParseCIDR(cidr)
 			if err != nil {
 				return nil, err
 			}
-			ips[i] = *ipnet
 		}
 
 		cf.Peers = append(cf.Peers, api.Peer{
 			PublicKey:  h.PublicKey,
 			Endpoint:   h.Endpoint,
-			AllowedIPs: ips,
+			AllowedIPs: h.AllowedIPs,
 		})
+	}
+
+	if !publicKeyFound {
+		return nil, ErrUnknownPublicKey
+	}
+
+	if len(cf.Peers) == 0 {
+		return nil, ErrNoPeers
 	}
 
 	return &cf, nil
